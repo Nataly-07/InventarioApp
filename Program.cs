@@ -1,12 +1,34 @@
 ﻿// Console.WriteLine("Hello, World!");
 
 
-
 using System.Reflection;
 
 var assembly = Assembly.GetExecutingAssembly();
 var version = assembly.GetName().Version;
 
+// Manejo de Argumentos
+if (args.Length >0)
+{
+    switch (args[0].ToLower())
+    {
+        case "--help":
+            MostrarAyuda();
+            Environment.Exit(0);
+            break;
+
+        case "--version":
+            Console.WriteLine($"InventarioApp v[{version}]");
+            Environment.Exit(0);
+            break;
+
+        default:
+            Console.WriteLine($"Error: Comando desconocido '{args[0]}'");
+            Console.WriteLine("Use --help para ver los comandos disponibles. ");
+            Environment.Exit(1);
+            break;
+
+    }
+}
 
 Console.WriteLine("");
 Console.WriteLine("     SISTEMA DE GESTIÓN DE INVENTARIO       ");
@@ -37,3 +59,26 @@ Console.WriteLine("Carpeta src/ creada");
 Console.WriteLine("Metadatos configurados");
 Console.WriteLine();
 Console.WriteLine("Proximo paso: Checkpoint");
+
+
+//Funciones
+void MostrarBanner ()
+{
+    
+}
+
+// Función 
+
+void MostrarAyuda ()
+{
+    Console.WriteLine("USO: InventarioApp [comando] [opciones]");
+    Console.WriteLine();
+    Console.WriteLine("COMANDOS:");
+    Console.WriteLine("  --help, -h      Muestra esta ayuda");
+    Console.WriteLine("  --version, -v   Muestra la version del programa");
+    Console.WriteLine();
+    Console.WriteLine("EJEMPLOS:");
+    Console.WriteLine(" dotnet run -- --help");
+    Console.WriteLine(" dotnet run -- --version");
+
+}
