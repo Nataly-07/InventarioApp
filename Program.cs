@@ -1,84 +1,51 @@
-﻿// Console.WriteLine("Hello, World!");
+﻿
+using InventarioApp.Repositories;
+
+using InventarioApp.src.models;
+using InventarioApp.src.Factories;
 
 
-using System.Reflection;
+Console.WriteLine("=== InventarioApp ===");
 
-var assembly = Assembly.GetExecutingAssembly();
-var version = assembly.GetName().Version;
+var repositorio = new InMemoryProductoRepository();
 
-// Manejo de Argumentos
-if (args.Length >0)
+var laptop = ProductoFactory.Crear("Laptop Dell XPS 13", 1200, 5, CategoriaProducto.Electronica);
+var mouse = ProductoFactory.Crear("Mouse Logitech MX Master", 99, 20, CategoriaProducto.Electronica);
+var teclado = ProductoFactory.Crear("Teclado Mecánico", 150, 3, CategoriaProducto.Electronica);
+var silla = ProductoFactory.Crear("Silla Ergonómica Herman Miller", 500, 8, CategoriaProducto.Muebles);
+var escritorio = ProductoFactory.Crear("Escritorio Stand-up", 300, 2, CategoriaProducto.Muebles);
+
+
+repositorio.Agregar(laptop);
+repositorio.Agregar(mouse);
+repositorio.Agregar(teclado);
+repositorio.Agregar(silla);
+repositorio.Agregar(escritorio);
+
+Console.WriteLine(($"Productos agregados: {repositorio.Cantidad}\n"));
+
+// Consultas basicas LINQ
+
+var electronicos = repositorio.BuscarPorCategoria(CategoriaProducto.Electronica);
+Console.WriteLine("Productos de electronica: ");
+
+foreach (var producto in electronicos)
 {
-    switch (args[0].ToLower())
-    {
-        case "--help":
-            MostrarAyuda();
-            Environment.Exit(0);
-            break;
-
-        case "--version":
-            Console.WriteLine($"InventarioApp v[{version}]");
-            Environment.Exit(0);
-            break;
-
-        default:
-            Console.WriteLine($"Error: Comando desconocido '{args[0]}'");
-            Console.WriteLine("Use --help para ver los comandos disponibles. ");
-            Environment.Exit(1);
-            break;
-
-    }
+    Console.WriteLine($" {producto.Nombre} : $ {producto.Precio}");
 }
 
-Console.WriteLine("");
-Console.WriteLine("     SISTEMA DE GESTIÓN DE INVENTARIO       ");
-Console.WriteLine("");
-Console.WriteLine();
+//
+var conMouse = repositorio.BuscarPorNombre("mouse");
+Console.WriteLine("\nProdutos con 'mouse' en el nombre ");
 
-Console.WriteLine($"Versión: {version}");
-
-// Console.WriteLine($"Versión: 1.0.0");
-Console.WriteLine($"Platafroma: {Environment.OSVersion}");
-Console.WriteLine($".NET Versión: {Environment.Version}");
-// Console.WriteLine();
-// Console.WriteLine("Estado: Proyecto inicializao");
-
-Console.WriteLine();
-Console.WriteLine("Estructura del Proyecto");
-
-Console.WriteLine("  InventarioApp/");
-Console.WriteLine("    |-- Program.cs");
-Console.WriteLine("    |-- InevntarioApp.csproj");
-Console.WriteLine("    |-- .gitignore");
-Console.WriteLine("    |-- README.md");
-Console.WriteLine("    |-- src/");
-Console.WriteLine("         |-- Models/ ");
-
-Console.WriteLine("Configuración .csproj");
-Console.WriteLine("Carpeta src/ creada");
-Console.WriteLine("Metadatos configurados");
-Console.WriteLine();
-Console.WriteLine("Proximo paso: Checkpoint");
-
-
-//Funciones
-void MostrarBanner ()
+foreach (var producto in conMouse)
 {
-    
+    Console.WriteLine($" {producto.Nombre}");
 }
 
-// Función 
+var nombres = repositorio.ObtenerNombres();
+Console.WriteLine($"\nTodos los nombres {string.Join(",", nombres)}");
 
-void MostrarAyuda ()
-{
-    Console.WriteLine("USO: InventarioApp [comando] [opciones]");
-    Console.WriteLine();
-    Console.WriteLine("COMANDOS:");
-    Console.WriteLine("  --help, -h      Muestra esta ayuda");
-    Console.WriteLine("  --version, -v   Muestra la version del programa");
-    Console.WriteLine();
-    Console.WriteLine("EJEMPLOS:");
-    Console.WriteLine(" dotnet run -- --help");
-    Console.WriteLine(" dotnet run -- --version");
-
-}
+var hayStockBajo = repositorio.HayStockBajo();
+Console.WriteLine(($"\n Hay stock bajo? {hayStockBajo}")); 
+ 
